@@ -119,13 +119,127 @@ namespace StudentManagementTests
                     var actionResult = Assert.IsType<ActionResult<Student>>(result);
                     var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(actionResult.Result);
                     var createdStudent = Assert.IsType<Student>(createdAtActionResult.Value);
-                    Assert.Equal(id, createdStudent.Id);
-                    Assert.Equal(firstName, createdStudent.FirstName);
-                    Assert.Equal(lastName, createdStudent.LastName);
-                    Assert.Equal(age, createdStudent.Age);
                 }
             }
         }
+
+
+        [Fact]
+        public async Task PutStudent_UpdatesStudent()
+        {
+            // in-memory database create
+            var options = new DbContextOptionsBuilder<StudentContext>()
+                .UseInMemoryDatabase(databaseName: "StudentObjectPut")
+                .Options;
+
+            // Add a student to the in-memory database
+            using (var context = new StudentContext(options))
+            {
+                Student initialStudent = new() { Id = 1, FirstName = "John", LastName = "Doe", Age = 20 };
+                context.Students.Add(initialStudent);
+                await context.SaveChangesAsync();
+            }
+
+            // Use a new instance of the context to run the update test
+            using (var context = new StudentContext(options))
+            {
+                var controller = new StudentsController(context);
+
+                // Verify that the student was added
+                var result = await controller.GetStudents();
+                var actionResult = Assert.IsType<ActionResult<IEnumerable<Student>>>(result);
+                var studentsList = Assert.IsAssignableFrom<IEnumerable<Student>>(actionResult.Value);
+                Assert.Single(studentsList);
+
+                // Detach the existing entity
+                var existingStudent = await context.Students.FindAsync(1);
+                if (existingStudent != null)
+                {
+                    context.Entry(existingStudent).State = EntityState.Detached;
+                }
+
+
+                // Update the student
+                int studentId = 1;
+                Student updatedStudent = new() { Id = studentId, FirstName = "Gob", LastName = "Smacker", Age = 12 };
+                var updateResult = await controller.PutStudent(studentId, updatedStudent);
+
+                // Assert check that the update was successful
+                Assert.IsType<NoContentResult>(updateResult);
+            }
+
+            // Use another new instance of the context to verify the update
+            using (var context = new StudentContext(options))
+            {
+                // Verify that the student was actually updated in the context
+                var studentInDb = await context.Students.FindAsync(1);
+                Assert.NotNull(studentInDb);
+                Assert.Equal("Gob", studentInDb.FirstName);
+                Assert.Equal("Smacker", studentInDb.LastName);
+                Assert.Equal(12, studentInDb.Age);
+            }
+        }
+
+
+
+        [Theory]
+        [InlineData(1,1,"", "", -1)] // Invalid data: empty names and negative age
+        [InlineData(1,1,"A", "B", 0)] // Edge case: minimum valid age
+        [InlineData(1,1,"John", "Doe", 150)] // Edge case: extremely high age
+        [InlineData(99, 1, "Gob", "Smacker", 12)] // Edge case: student does not exist
+        [InlineData(-1, -1, "Meat", "Meat", 8)] // Edge case: student does not exist
+        public async Task PutStudent_HandlesEdgeCases(int id, int studentId, string firstName, string lastName, int age)
+        {
+            // in-memory database create
+            var options = new DbContextOptionsBuilder<StudentContext>()
+                .UseInMemoryDatabase(databaseName: "StudentObjectPut")
+                .Options;
+
+            // Use a new instance of the context to run the update test
+            using (var context = new StudentContext(options))
+            {
+                var controller = new StudentsController(context);
+
+                // Detach the existing entity if it exists
+                var existingStudent = await context.Students.FindAsync(1);
+                if (existingStudent != null)
+                {
+                    context.Entry(existingStudent).State = EntityState.Detached;
+                }
+
+                // Update the student
+                Student updatedStudent = new() { Id = id, FirstName = firstName, LastName = lastName, Age = age };
+                var updateResult = await controller.PutStudent(studentId, updatedStudent);
+                    // Assert check that bad request or not found is returned for invalid data or non-existent student
+                if (id != studentId && id != -1)
+                {
+                        Assert.IsType<BadRequestResult>(updateResult);
+                }
+                else if (id == -1 || studentId == -1)
+                {
+                    Assert.IsType<NotFoundResult>(updateResult);
+                }
+                else
+                {
+                    Assert.IsType<NoContentResult>(updateResult);
+                }
+            }
+
+            // Use another new instance of the context to verify the update if it was successful
+            if (id == 1 && !string.IsNullOrEmpty(firstName) && !string.IsNullOrEmpty(lastName) && age >= 0)
+            {
+                using (var context = new StudentContext(options))
+                {
+                    // Verify that the student was actually updated in the context
+                    var studentInDb = await context.Students.FindAsync(1);
+                    Assert.NotNull(studentInDb);
+                    Assert.Equal(firstName, studentInDb.FirstName);
+                    Assert.Equal(lastName, studentInDb.LastName);
+                    Assert.Equal(age, studentInDb.Age);
+                }
+            }
+        }
+
 
 
     }

@@ -35,6 +35,7 @@ namespace StudentManagement.Controllers
             return student;
         }
 
+        //creates student
         [HttpPost]
         public async Task<ActionResult<Student>> PostStudent(Student student)
         {
@@ -49,6 +50,7 @@ namespace StudentManagement.Controllers
         }
 
 
+        //updates student
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStudent(int id, Student student)
         {
