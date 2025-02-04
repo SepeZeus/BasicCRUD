@@ -200,12 +200,12 @@ namespace StudentManagementTests
             {
                 var controller = new StudentsController(context);
 
-                // Detach the existing entity if it exists
-                var existingStudent = await context.Students.FindAsync(1);
-                if (existingStudent != null)
-                {
-                    context.Entry(existingStudent).State = EntityState.Detached;
-                }
+                //// Detach the existing entity if it exists
+                //var existingStudent = await context.Students.FindAsync(1);
+                //if (existingStudent != null)
+                //{
+                //    context.Entry(existingStudent).State = EntityState.Detached;
+                //}
 
                 // Update the student
                 Student updatedStudent = new() { Id = id, FirstName = firstName, LastName = lastName, Age = age };
@@ -242,5 +242,94 @@ namespace StudentManagementTests
 
 
 
+
+
+        [Fact]
+        public async Task DeleteStudent_RemovesStudentFromDB()
+        {
+            // in-memory database create
+            var options = new DbContextOptionsBuilder<StudentContext>()
+                .UseInMemoryDatabase(databaseName: "StudentObjectDelete")
+                .Options;
+
+            // Add a student to the in-memory database
+            using (var context = new StudentContext(options))
+            {
+                Student initialStudent = new() { Id = 1, FirstName = "John", LastName = "Doe", Age = 20 };
+                context.Students.Add(initialStudent);
+                await context.SaveChangesAsync();
+            }
+
+            // Use a new instance of the context to run the delete test
+            using (var context = new StudentContext(options))
+            {
+                var controller = new StudentsController(context);
+
+                // Delete the student
+                int studentId = 1;
+                var deleteResult = await controller.DeleteStudent(studentId);
+
+                // Assert check that the delete was successful
+                Assert.IsType<NoContentResult>(deleteResult);
+            }
+
+            // Use another new instance of the context to verify the deletion
+            using (var context = new StudentContext(options))
+            {
+                // Verify that the student was actually removed from the context
+                var studentInDb = await context.Students.FindAsync(1);
+                Assert.Null(studentInDb);
+            }
+        }
+
+
+
+        [Theory]
+        [InlineData(0)] // non-existant student
+        [InlineData(-1)] // non-existant student -- try negative value
+        [InlineData(1)] // existing student
+        public async Task DeleteStudents_RemovesStudentsFromDB(int studentId)
+        {
+            // in-memory database create
+            var options = new DbContextOptionsBuilder<StudentContext>()
+                .UseInMemoryDatabase(databaseName: "StudentObjectDelete")
+                .Options;
+
+            // Add a student to the in-memory database
+            using (var context = new StudentContext(options))
+            {
+                var existingStudent = await context.Students.FindAsync(1);
+                if (existingStudent == null)
+                {
+                    Student initialStudent = new() { Id = 1, FirstName = "John", LastName = "Doe", Age = 20 };
+                    context.Students.Add(initialStudent);
+                    await context.SaveChangesAsync();
+                }
+            }
+
+            // Use a new instance of the context to run the delete test
+            using (var context = new StudentContext(options))
+            {
+                var controller = new StudentsController(context);
+
+
+                // Delete the student
+                var deleteResult = await controller.DeleteStudent(studentId);
+
+                if (studentId == 0 || studentId == -1)
+                {
+                    // Assert check that the delete was not successful
+                    Assert.IsType<NotFoundResult>(deleteResult);
+                }
+                else
+                {
+
+                    // Assert check that the delete was successful
+                    Assert.IsType<NoContentResult>(deleteResult);
+                }
+            }
+
+        }
+
+        }
     }
-}
