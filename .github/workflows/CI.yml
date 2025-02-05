@@ -20,13 +20,16 @@ jobs:
           dotnet-version: 8.0
 
       - name: Restore dependencies
-        run: dotnet restore StudentManagement
+        run: dotnet restore StudentManagement/StudentManagement.csproj
 
       - name: Build solution
-        run: dotnet build StudentManagement --no-restore
+        run: dotnet build StudentManagement/StudentManagement.csproj --no-restore
+
+      - name: Build test project
+        run: dotnet build StudentManagementTests/StudentManagementTests.csproj --no-restore
 
       - name: Run tests
-        run: dotnet test StudentManagementTests --no-build --verbosity normal
+        run: dotnet test StudentManagementTests/StudentManagementTests.csproj --no-build --verbosity normal
 
       # - name: Restore dependencies
       #   run: dotnet restore
