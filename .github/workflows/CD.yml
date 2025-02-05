@@ -1,10 +1,5 @@
 name: CD Pipeline
 
-# on:
-#   push:
-#     branches:
-#       - main
-
 on:
   workflow_run:
     workflows:
