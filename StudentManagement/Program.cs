@@ -22,6 +22,16 @@ builder.Services.AddSwaggerGen(c => // Add this configuration
 
 var app = builder.Build();
 
+
+
+//// Configure the HTTP request pipeline.
+//// Alkuperäinen tapa (Swagger näkyy vain Development-tilassa):
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+
 app.MapControllers();
 app.UseSwagger();
 app.UseSwaggerUI();
