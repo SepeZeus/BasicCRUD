@@ -19,10 +19,13 @@ jobs:
         with:
           dotnet-version: 8.0
 
-      - name: Restore dependencies
+      - name: Restore dependencies for main project
         run: dotnet restore StudentManagement/StudentManagement.csproj
 
-      - name: Build solution
+      - name: Restore dependencies for test project
+        run: dotnet restore StudentManagementTests/StudentManagementTests.csproj
+
+      - name: Build main project
         run: dotnet build StudentManagement/StudentManagement.csproj --no-restore
 
       - name: Build test project
