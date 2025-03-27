@@ -1,35 +1,41 @@
-# name: CI Pipeline
+name: CI Pipeline
 
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
-# jobs:
-#   build-and-test:
-#     runs-on: ubuntu-latest
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-#       - name: Setup .NET
-#         uses: actions/setup-dotnet@v3
-#         with:
-#           dotnet-version: 8.0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0
 
-#       - name: Restore dependencies for main project
-#         run: dotnet restore StudentManagement/StudentManagement.csproj
+      - name: Restore dependencies for all projects
+        run: dotnet restore
 
-#       - name: Restore dependencies for test project
-#         run: dotnet restore StudentManagementTests/StudentManagementTests.csproj
+      - name: Build Presentation project
+        run: dotnet build StudentEfCoreDemo.Presentation/StudentEfCoreDemo.Presentation.csproj --no-restore
 
-#       - name: Build main project
-#         run: dotnet build StudentManagement/StudentManagement.csproj --no-restore
+      - name: Build Domain project
+        run: dotnet build StudentEfCoreDemo.Domain/StudentEfCoreDemo.Domain.csproj --no-restore
 
-#       - name: Build test project
-#         run: dotnet build StudentManagementTests/StudentManagementTests.csproj --no-restore
+      - name: Build Infrastructure project
+        run: dotnet build StudentEfCoreDemo.Infrastructure/StudentEfCoreDemo.Infrastructure.csproj --no-restore
 
-#       - name: Run tests
-#         run: dotnet test StudentManagementTests/StudentManagementTests.csproj --no-build --verbosity normal
+      - name: Build Application project
+        run: dotnet build StudentEfCoreDemo.Application/StudentEfCoreDemo.Application.csproj --no-restore
+
+      - name: Build Tests project
+        run: dotnet build StudentEfCoreDemo.Tests/StudentEfCoreDemo.Tests.csproj --no-restore
+
+      - name: Run tests
+        run: dotnet test StudentEfCoreDemo.Tests/StudentEfCoreDemo.Tests.csproj --no-build --verbosity normal

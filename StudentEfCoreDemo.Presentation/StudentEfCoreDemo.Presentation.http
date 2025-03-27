@@ -1,6 +1,0 @@
-@StudentEfCoreDemo.Presentation_HostAddress = http://localhost:5215
-
-GET {{StudentEfCoreDemo.Presentation_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
