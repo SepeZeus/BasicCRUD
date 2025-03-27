@@ -17,22 +17,25 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 8.0
+          dotnet-version: 9.0
+
+      - name: Restore dependencies for all projects
+        run: dotnet restore
 
       - name: Build Presentation project
-        run: dotnet build StudentEfCoreDemo.Presentation/StudentEfCoreDemo.Presentation.csproj --restore
+        run: dotnet build StudentEfCoreDemo.Presentation/StudentEfCoreDemo.Presentation/StudentEfCoreDemo.Presentation.csproj --no-restore
 
       - name: Build Domain project
-        run: dotnet build StudentEfCoreDemo.Domain/StudentEfCoreDemo.Domain.csproj --restore
+        run: dotnet build StudentEfCoreDemo.Domain/StudentEfCoreDemo.Domain.csproj --no-restore
 
       - name: Build Infrastructure project
-        run: dotnet build StudentEfCoreDemo.Infrastructure/StudentEfCoreDemo.Infrastructure.csproj --restore
+        run: dotnet build StudentEfCoreDemo.Infrastructure/StudentEfCoreDemo.Infrastructure.csproj --no-restore
 
       - name: Build Application project
-        run: dotnet build StudentEfCoreDemo.Application/StudentEfCoreDemo.Application.csproj --restore
+        run: dotnet build StudentEfCoreDemo.Application/StudentEfCoreDemo.Application.csproj --no-restore
 
       - name: Build Tests project
-        run: dotnet build StudentEfCoreDemo.Tests/StudentEfCoreDemo.Tests.csproj --restore
+        run: dotnet build StudentEfCoreDemo.Tests/StudentEfCoreDemo.Tests.csproj --no-restore
 
       - name: Run tests
         run: dotnet test StudentEfCoreDemo.Tests/StudentEfCoreDemo.Tests.csproj --no-build --verbosity normal
