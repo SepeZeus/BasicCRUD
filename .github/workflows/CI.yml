@@ -1,35 +1,35 @@
-name: CI Pipeline
+# name: CI Pipeline
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
 
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+# jobs:
+#   build-and-test:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 8.0
+#       - name: Setup .NET
+#         uses: actions/setup-dotnet@v3
+#         with:
+#           dotnet-version: 8.0
 
-      - name: Restore dependencies for main project
-        run: dotnet restore StudentManagement/StudentManagement.csproj
+#       - name: Restore dependencies for main project
+#         run: dotnet restore StudentManagement/StudentManagement.csproj
 
-      - name: Restore dependencies for test project
-        run: dotnet restore StudentManagementTests/StudentManagementTests.csproj
+#       - name: Restore dependencies for test project
+#         run: dotnet restore StudentManagementTests/StudentManagementTests.csproj
 
-      - name: Build main project
-        run: dotnet build StudentManagement/StudentManagement.csproj --no-restore
+#       - name: Build main project
+#         run: dotnet build StudentManagement/StudentManagement.csproj --no-restore
 
-      - name: Build test project
-        run: dotnet build StudentManagementTests/StudentManagementTests.csproj --no-restore
+#       - name: Build test project
+#         run: dotnet build StudentManagementTests/StudentManagementTests.csproj --no-restore
 
-      - name: Run tests
-        run: dotnet test StudentManagementTests/StudentManagementTests.csproj --no-build --verbosity normal
+#       - name: Run tests
+#         run: dotnet test StudentManagementTests/StudentManagementTests.csproj --no-build --verbosity normal

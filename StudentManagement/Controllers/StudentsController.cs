@@ -1,17 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StudentManagement.Data;
-using StudentManagement.Models;
+using StudentEfCoreDemo.Application.Services;
 
-
-namespace StudentManagement.Controllers
+namespace StudentEfCoreDemo.Presentation.Controllers
 {
 
     [ApiController]
     [Route("api/[controller]")]
     public class StudentsController : ControllerBase
     {
-        private readonly StudentContext _context;
+        private readonly StudentsService studentsService;
 
         public StudentsController(StudentContext context)
         {
