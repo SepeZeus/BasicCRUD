@@ -8,11 +8,11 @@ namespace StudentEfCoreDemo.Presentation.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class StudentsController : ControllerBase
+    public class StudentController : ControllerBase
     {
         private readonly StudentsService _studentsService;
 
-        public StudentsController(StudentsService studentsService)
+        public StudentController(StudentsService studentsService)
         {
             _studentsService = studentsService;
         }

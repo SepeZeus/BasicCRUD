@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentEfCoreDemo.Domain", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentEfCoreDemo.Infrastructure", "..\StudentEfCoreDemo.Infrastructure\StudentEfCoreDemo.Infrastructure.csproj", "{D4D9919E-5188-4D0A-A1CC-51F0AF1D44EA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentEfCoreDemo.Tests", "..\StudentEfCoreDemo.Tests\StudentEfCoreDemo.Tests.csproj", "{FEAC98AF-AF9A-457B-A113-4FC41458089A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{D4D9919E-5188-4D0A-A1CC-51F0AF1D44EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4D9919E-5188-4D0A-A1CC-51F0AF1D44EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4D9919E-5188-4D0A-A1CC-51F0AF1D44EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEAC98AF-AF9A-457B-A113-4FC41458089A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEAC98AF-AF9A-457B-A113-4FC41458089A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEAC98AF-AF9A-457B-A113-4FC41458089A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEAC98AF-AF9A-457B-A113-4FC41458089A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
